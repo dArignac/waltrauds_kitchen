@@ -49,3 +49,4 @@ app.*.map.json
 # firebase sensitive files
 android/app/google-services.json
 lib/firebase_options.dart
+.firebaserc
