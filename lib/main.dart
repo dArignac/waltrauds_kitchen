@@ -33,21 +33,23 @@ class WaltraudKitchenApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const name = 'Waltraud\'s Kitchen';
     return MaterialApp(
-        title: name,
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
+      title: name,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+      ),
+      // FIXME move the scaffold to sub components?
+      home: Scaffold(
+        appBar: AppBar(title: const Text(name)),
+        body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return const Text("FIXME I'm logged in");
+            }
+            return const AuthGate();
+          },
         ),
-        // FIXME move the scaffold to sub components?
-        home: Scaffold(
-            appBar: AppBar(title: const Text(name)),
-            body: StreamBuilder<User?>(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return const Text("FIXME I'm logged in");
-                }
-                return const AuthGate();
-              },
-            )));
+      ),
+    );
   }
 }

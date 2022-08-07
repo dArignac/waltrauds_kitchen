@@ -69,21 +69,21 @@ class _AuthGateState extends State<AuthGate> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text('Welcome to Waltraud\'s kitchen.', style: TextStyle(fontSize: 24)),
-        const SizedBox(
-          height: 20,
-        ),
-        SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Welcome to Waltraud\'s kitchen.', style: TextStyle(fontSize: 24)),
+          const SizedBox(
+            height: 20,
+          ),
+          SingleChildScrollView(
             child: SafeArea(
-          child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 300),
-              child: Column(
-                children: [
-                  Visibility(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 300),
+                child: Column(
+                  children: [
+                    Visibility(
                       visible: error.isNotEmpty,
                       child: MaterialBanner(
                         backgroundColor: Theme.of(context).errorColor,
@@ -95,23 +95,25 @@ class _AuthGateState extends State<AuthGate> {
                                   error = '';
                                 });
                               },
-                              child: const Text('Dismiss', style: TextStyle(color: Colors.white)))
+                              child: const Text('Dismiss', style: TextStyle(color: Colors.white))),
                         ],
                         contentTextStyle: const TextStyle(color: Colors.white),
                         padding: const EdgeInsets.all(10),
-                      )),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: Center(
-                      child: isLoading ? const LinearProgressIndicator() : const Text("Please log in to continue:"),
+                      ),
                     ),
-                  ),
-                  // iterate the auth buttons
-                  ...authButtons.keys
-                      .map((button) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: AnimatedSwitcher(
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: Center(
+                        child: isLoading ? const LinearProgressIndicator() : const Text("Please log in to continue:"),
+                      ),
+                    ),
+                    // iterate the auth buttons
+                    ...authButtons.keys
+                        .map(
+                          (button) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 200),
                               child: isLoading
                                   ? Container(
@@ -119,12 +121,22 @@ class _AuthGateState extends State<AuthGate> {
                                       height: 50,
                                       width: double.infinity,
                                     )
-                                  : SizedBox(width: double.infinity, height: 50, child: SignInButton(button, onPressed: authButtons[button]!)))))
-                      .toList()
-                ],
-              )),
-        )),
-      ],
-    ));
+                                  : SizedBox(
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: SignInButton(button, onPressed: authButtons[button]!),
+                                    ),
+                            ),
+                          ),
+                        )
+                        .toList()
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
