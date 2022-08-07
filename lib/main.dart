@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:waltrauds_kitchen/auth.dart';
 
 import 'firebase_options.dart';
 
@@ -14,7 +15,11 @@ void main() async {
   );
 
   if (shouldUseFirebaseEmulator) {
-    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+    try {
+      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+    } catch (e) {
+      //print(e);
+    }
   }
 
   runApp(const WaltraudKitchenApp());
@@ -32,19 +37,17 @@ class WaltraudKitchenApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.indigo,
         ),
+        // FIXME move the scaffold to sub components?
         home: Scaffold(
-          appBar: AppBar(title: const Text(name)),
-          body: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Text(
-                  "Welcome to Waltraud's Kitchen.",
-                  style: TextStyle(fontSize: 24),
-                )
-              ],
-            ),
-          ),
-        ));
+            appBar: AppBar(title: const Text(name)),
+            body: StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return const Text("FIXME I'm logged in");
+                }
+                return const AuthGate();
+              },
+            )));
   }
 }
