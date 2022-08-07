@@ -1,20 +1,26 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:waltrauds_kitchen/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'firebase_options.dart';
 
-bool shouldUseFirebaseEmulator = true;
+class Environment {
+  static bool get useFirebaseEmulator => dotenv.env['FIREBASE_EMULATOR'] == 'true';
+  static String get firebaseGoogleAuthWebClientId => dotenv.env['FIREBASE_GOOGLE_AUTH_CLIENT_ID'] ?? 'none';
+}
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env.${kReleaseMode ? 'production' : 'development'}');
 
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  if (shouldUseFirebaseEmulator) {
+  if (Environment.useFirebaseEmulator) {
     try {
       await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
     } catch (e) {

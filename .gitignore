@@ -48,6 +48,8 @@ app.*.map.json
 
 # firebase sensitive files
 android/app/google-services.json
-lib/config.dart
 lib/firebase_options.dart
 .firebaserc
+.firebase/hosting.*
+.env.development
+.env.production
