@@ -1,21 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:waltrauds_kitchen/auth.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'firebase_options.dart';
 
 class Environment {
-  static bool get useFirebaseEmulator => dotenv.env['FIREBASE_EMULATOR'] == 'true';
-  static String get firebaseGoogleAuthWebClientId => dotenv.env['FIREBASE_GOOGLE_AUTH_CLIENT_ID'] ?? 'none';
+  static bool get useFirebaseEmulator => const String.fromEnvironment('FIREBASE_EMULATOR') == 'true';
+  static String get firebaseGoogleAuthWebClientId => const String.fromEnvironment('FIREBASE_GOOGLE_AUTH_CLIENT_ID');
 }
 
 void main() async {
-  await dotenv.load(fileName: '.env.${kReleaseMode ? 'production' : 'development'}');
-
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -50,7 +47,12 @@ class WaltraudKitchenApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return const Text("FIXME I'm logged in");
+              return Column(
+                children: [
+                  const Text("FIXME I'm logged in"),
+                  TextButton(onPressed: (){}, child: Text("Logout")),
+                ],
+              );
             }
             return const AuthGate();
           },

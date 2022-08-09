@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:waltrauds_kitchen/main.dart';
+
+import 'main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -27,7 +28,12 @@ class _AuthGateState extends State<AuthGate> {
     setIsLoading();
 
     try {
-      final googleUser = await GoogleSignIn(clientId: Environment.firebaseGoogleAuthWebClientId).signIn();
+      String clientId = '';
+      // we only need the clientId for the web
+      if (kIsWeb) {
+        clientId = Environment.firebaseGoogleAuthWebClientId;
+      }
+      final googleUser = await GoogleSignIn(clientId: clientId).signIn();
       final googleAuth = await googleUser?.authentication;
       if (googleAuth != null) {
         final credential = GoogleAuthProvider.credential(
