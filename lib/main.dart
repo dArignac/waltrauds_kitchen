@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:waltrauds_kitchen/auth.dart';
+import 'package:waltrauds_kitchen/drawer.dart';
 
+import 'globals.dart' as globals;
 import 'firebase_options.dart';
 
 class Environment {
@@ -34,23 +36,21 @@ class WaltraudKitchenApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    const name = 'Waltraud\'s Kitchen';
     return MaterialApp(
-      title: name,
+      title: globals.applicationName,
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      // FIXME move the scaffold to sub components?
       home: Scaffold(
-        appBar: AppBar(title: const Text(name)),
+        appBar: AppBar(title: Text(globals.applicationName)),
+        drawer: const DrawerWidget(),
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Column(
-                children: [
-                  const Text("FIXME I'm logged in"),
-                  TextButton(onPressed: (){}, child: Text("Logout")),
+                children: const [
+                  Text("Hello!"),
                 ],
               );
             }

@@ -1,0 +1,1 @@
+String applicationName = 'Waltraud\'s Kitchen';
