@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:waltrauds_kitchen/auth.dart';
+import 'package:waltrauds_kitchen/widgets/center.dart';
 import 'package:waltrauds_kitchen/drawer.dart';
 
 import 'globals.dart' as globals;
@@ -49,9 +50,13 @@ class WaltraudKitchenApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Column(
-                children: const [
-                  Text("Hello!"),
+              return CenterWidget(
+                children: [
+                  Column(
+                    children: const [
+                      Text("Hello!"),
+                    ],
+                  )
                 ],
               );
             }
