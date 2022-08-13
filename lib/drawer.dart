@@ -19,37 +19,36 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             var elements = <Widget>[
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
-                ),
-                child: Text(
-                  globals.applicationName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
+              _createHeader(),
+              snapshot.hasData ? _createSignOut() : const SizedBox.shrink()
             ];
-
-            if (snapshot.hasData) {
-              elements.add(
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: const Text('Log out'),
-                  onTap: () {
-                    _auth.signOut();
-                  },
-                ),
-              );
-            }
-
             return ListView(
               padding: EdgeInsets.zero,
               children: elements,
             );
           }),
+    );
+  }
+
+  Widget _createHeader() {
+    return DrawerHeader(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor
+      ),
+      child: Text(
+        globals.applicationName,
+        style: Theme.of(context).textTheme.titleLarge?.merge(const TextStyle(color: Colors.white))
+      ),
+    );
+  }
+
+  Widget _createSignOut() {
+    return ListTile(
+      leading: const Icon(Icons.logout),
+      title: const Text('Log out'),
+      onTap: () {
+        _auth.signOut();
+      },
     );
   }
 }

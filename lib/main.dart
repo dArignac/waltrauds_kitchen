@@ -41,6 +41,7 @@ class WaltraudKitchenApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
+      darkTheme: ThemeData.dark(),
       home: Scaffold(
         appBar: AppBar(title: Text(globals.applicationName)),
         drawer: const DrawerWidget(),

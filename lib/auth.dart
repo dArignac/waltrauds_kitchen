@@ -78,7 +78,7 @@ class _AuthGateState extends State<AuthGate> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text('Welcome to Waltraud\'s kitchen.', style: TextStyle(fontSize: 24)),
+          Text('Welcome to Waltraud\'s kitchen.', style: Theme.of(context).textTheme.headline5),
           const SizedBox(
             height: 20,
           ),
