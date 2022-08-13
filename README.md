@@ -29,3 +29,6 @@ A weekly menu planning and receipt helper.
 
 ### Deploy web app
 * `FIREBASE_GOOGLE_AUTH_CLIENT_ID=<clientid> make deploy`
+
+### Firestore
+to be defined
