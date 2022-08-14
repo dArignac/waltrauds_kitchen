@@ -50,7 +50,8 @@ android {
         applicationId "rocks.torv.waltrauds_kitchen"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        // minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21 // required for cloud_firestore, see https://stackoverflow.com/a/56368847/364244
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
