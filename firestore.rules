@@ -12,12 +12,18 @@ service cloud.firestore {
           request.auth.token.email_verified;
       }
 
+      function userDisplayNameIsValid() {
+        return request.resource.data.displayName is string &&
+          request.resource.data.displayName.size() > 0;
+      }
+
       function userPhotoUrlIsValid() {
         return request.resource.data.photoURL is string;
       }
 
       allow read: if isLoggedInUser(userId);
       allow create, update: if isLoggedInUser(userId) &&
+        userDisplayNameIsValid() &&
         userPhotoUrlIsValid();
     }
   }

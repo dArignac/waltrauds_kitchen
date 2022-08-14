@@ -64,7 +64,7 @@ class _AuthGateState extends State<AuthGate> {
     if (user != null) {
       users.doc(user.uid).get().then((snapshot) {
         // FIXME need to merge only FirebaseAuth data once the user object is extended further
-        final userData = AuthenticatedUser(photoURL: user.photoURL ?? '').toJson();
+        final userData = AuthenticatedUser(displayName: user.displayName!, photoURL: user.photoURL ?? '').toJson();
         // FIXME add general error handling
         users.doc(user.uid).set(userData).onError((error, _) => print("Error writing user document: $error"));
       });
