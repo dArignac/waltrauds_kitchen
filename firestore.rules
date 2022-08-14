@@ -1,8 +1,24 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+    //match /{document=**} {
+    //  allow read, write;
+    //}
+
+    match /users/{userId} {
+      function isLoggedInUser(userId) {
+        return request.auth !=null &&
+          userId == request.auth.uid &&
+          request.auth.token.email_verified;
+      }
+
+      function userPhotoUrlIsValid() {
+        return request.resource.data.photoURL is string;
+      }
+
+      allow read: if isLoggedInUser(userId);
+      allow create, update: if isLoggedInUser(userId) &&
+        userPhotoUrlIsValid();
     }
   }
 }

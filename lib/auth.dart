@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:waltrauds_kitchen/widgets/center.dart';
 
+import 'firebase.dart';
 import 'main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -42,6 +44,9 @@ class _AuthGateState extends State<AuthGate> {
           idToken: googleAuth.idToken,
         );
         await _auth.signInWithCredential(credential);
+        _createOrUpdateUserDocument();
+      } else {
+        // FIXME general error handling
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -49,6 +54,22 @@ class _AuthGateState extends State<AuthGate> {
       });
     } finally {
       setIsLoading();
+    }
+  }
+
+  /// Creates or updates the user document in Firestore.
+  _createOrUpdateUserDocument() {
+    CollectionReference<Map<String, dynamic>> users = FirebaseFirestore.instance.collection('users');
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      users.doc(user.uid).get().then((snapshot) {
+        // FIXME need to merge only FirebaseAuth data once the user object is extended further
+        final userData = AuthenticatedUser(photoURL: user.photoURL ?? '').toJson();
+        // FIXME add general error handling
+        users.doc(user.uid).set(userData).onError((error, _) => print("Error writing user document: $error"));
+      });
+    } else {
+      // FIXME if auth failed we're lost
     }
   }
 

@@ -1,12 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:waltrauds_kitchen/auth.dart';
-import 'package:waltrauds_kitchen/widgets/center.dart';
 import 'package:waltrauds_kitchen/drawer.dart';
+import 'package:waltrauds_kitchen/widgets/center.dart';
 
-import 'globals.dart' as globals;
 import 'firebase_options.dart';
+import 'globals.dart' as globals;
 
 class Environment {
   static bool get useFirebaseEmulator => const String.fromEnvironment('FIREBASE_EMULATOR') == 'true';
@@ -26,6 +27,7 @@ void main() async {
     } catch (e) {
       //print(e);
     }
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
 
   runApp(const WaltraudKitchenApp());
