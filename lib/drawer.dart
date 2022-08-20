@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:waltrauds_kitchen/firebase.dart';
+import 'package:waltrauds_kitchen/database.dart';
 import 'globals.dart' as globals;
 
 final FirebaseAuth _auth = FirebaseAuth.instance;

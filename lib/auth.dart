@@ -8,7 +8,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:waltrauds_kitchen/widgets/center.dart';
 
-import 'firebase.dart';
+import 'database.dart';
 import 'main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -66,7 +66,7 @@ class _AuthGateState extends State<AuthGate> {
         // FIXME need to merge only FirebaseAuth data once the user object is extended further
         final userData = AuthenticatedUser(displayName: user.displayName!, photoURL: user.photoURL ?? '').toJson();
         // FIXME add general error handling
-        users.doc(user.uid).set(userData).onError((error, _) => print("Error writing user document: $error"));
+        users.doc(user.uid).set(userData).onError((error, _) => print('Error writing user document: $error'));
       });
     } else {
       // FIXME if auth failed we're lost
@@ -128,7 +128,7 @@ class _AuthGateState extends State<AuthGate> {
                   width: double.infinity,
                   height: 50,
                   child: Center(
-                    child: isLoading ? const LinearProgressIndicator() : const Text("Please log in to continue:"),
+                    child: isLoading ? const LinearProgressIndicator() : const Text('Please log in to continue:'),
                   ),
                 ),
                 // iterate the auth buttons

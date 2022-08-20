@@ -1,30 +1,48 @@
 rules_version = '2';
 service cloud.firestore {
+
+  // general authentication
+  function isAnyLoggedInUser() {
+    return request.auth != null &&
+      request.auth.token.email_verified;
+  }
+
+  function isSpecificLoggedInUser(userId) {
+    return isAnyLoggedInUser() &&
+      userId == request.auth.uid;
+  }
+
+  // users
+  function userDisplayNameIsValid() {
+    return request.resource.data.displayName is string &&
+      request.resource.data.displayName.size() > 0;
+  }
+
+  function userPhotoUrlIsValid() {
+    return request.resource.data.photoURL is string;
+  }
+
+  // communities
+  function isCommunityOwner(database, communityId) {
+    return get(/databases/$(database)/documents/communities/$(communityId)/private_data/private).data.roles[request.auth.uid] in ["owner"];
+  }
+
+  // communities - private data
+  // TODO specify
+
+  // matches
   match /databases/{database}/documents {
-    //match /{document=**} {
-    //  allow read, write;
-    //}
 
     match /users/{userId} {
-      function isLoggedInUser(userId) {
-        return request.auth !=null &&
-          userId == request.auth.uid &&
-          request.auth.token.email_verified;
-      }
-
-      function userDisplayNameIsValid() {
-        return request.resource.data.displayName is string &&
-          request.resource.data.displayName.size() > 0;
-      }
-
-      function userPhotoUrlIsValid() {
-        return request.resource.data.photoURL is string;
-      }
-
-      allow read: if isLoggedInUser(userId);
-      allow create, update: if isLoggedInUser(userId) &&
+      allow read: if isSpecificLoggedInUser(userId);
+      allow create, update: if isSpecificLoggedInUser(userId) &&
         userDisplayNameIsValid() &&
         userPhotoUrlIsValid();
+    }
+
+    match /communities/{communityId} {
+      allow read: if isAnyLoggedInUser();
+      allow update: if isCommunityOwner(database, communityId);
     }
   }
 }

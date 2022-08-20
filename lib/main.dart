@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:waltrauds_kitchen/auth.dart';
+import 'package:waltrauds_kitchen/communities/list.dart';
 import 'package:waltrauds_kitchen/drawer.dart';
 import 'package:waltrauds_kitchen/widgets/center.dart';
 
@@ -39,10 +40,11 @@ class WaltraudKitchenApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = ThemeData(primarySwatch: Colors.indigo);
     return MaterialApp(
       title: globals.applicationName,
-      theme: ThemeData(
-        primarySwatch: Colors.indigo,
+      theme: theme.copyWith(
+        colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),
       ),
       darkTheme: ThemeData.dark(),
       home: Scaffold(
@@ -52,14 +54,8 @@ class WaltraudKitchenApp extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return CenterWidget(
-                children: [
-                  Column(
-                    children: const [
-                      Text("Hello!"),
-                    ],
-                  )
-                ],
+              return const CenterWidget(
+                children: [CommunitySelector()],
               );
             }
             return const AuthGate();
