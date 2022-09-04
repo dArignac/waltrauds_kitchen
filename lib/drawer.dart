@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:waltrauds_kitchen/database.dart';
+
 import 'globals.dart' as globals;
+import 'main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -20,8 +22,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       child: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
+            // the navigation list
             var elements = <Widget>[
               _createHeader(snapshot.hasData ? _createUserInfo(snapshot.data) : const SizedBox.shrink()),
+              _createCommunityOverview(),
               snapshot.hasData ? _createSignOut() : const SizedBox.shrink(),
             ];
 
@@ -79,12 +83,23 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     return const SizedBox.shrink();
   }
 
+  Widget _createCommunityOverview() {
+    return ListTile(
+      leading: const Icon(Icons.list),
+      title: const Text('Your Communities'),
+      onTap: () {
+        Navigator.pushReplacementNamed(context, Routes.communitiesList);
+      },
+    );
+  }
+
   Widget _createSignOut() {
     return ListTile(
       leading: const Icon(Icons.logout),
       title: const Text('Log out'),
       onTap: () {
         _auth.signOut();
+        Navigator.pushReplacementNamed(context, Routes.home);
       },
     );
   }

@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:waltrauds_kitchen/auth.dart';
-import 'package:waltrauds_kitchen/communities/list.dart';
-import 'package:waltrauds_kitchen/drawer.dart';
-import 'package:waltrauds_kitchen/widgets/center.dart';
+import 'package:waltrauds_kitchen/pages/communities.dart';
+import 'package:waltrauds_kitchen/pages/home.dart';
 
 import 'firebase_options.dart';
 import 'globals.dart' as globals;
@@ -34,34 +32,34 @@ void main() async {
   runApp(const WaltraudKitchenApp());
 }
 
+/// Holds routes for re-usability.
+class Routes {
+  static const String home = '/';
+  static const String communitiesList = '/communities';
+  static const String communitiesCreate = '/communities/new';
+}
+
 class WaltraudKitchenApp extends StatelessWidget {
   const WaltraudKitchenApp({Key? key}) : super(key: key);
+
+  _getRoutes() {
+    return {
+      Routes.home: (context) => const Home(), // default route
+      Routes.communitiesList: (context) => const CommunityListPage(),
+      Routes.communitiesCreate: (context) => const CommunityCreatePage(),
+    };
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = ThemeData(primarySwatch: Colors.indigo);
     return MaterialApp(
-      title: globals.applicationName,
-      theme: theme.copyWith(
-        colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),
-      ),
-      darkTheme: ThemeData.dark(),
-      home: Scaffold(
-        appBar: AppBar(title: Text(globals.applicationName)),
-        drawer: const DrawerWidget(),
-        body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return const CenterWidget(
-                children: [CommunitySelector()],
-              );
-            }
-            return const AuthGate();
-          },
+        title: globals.applicationName,
+        theme: theme.copyWith(
+          colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),
         ),
-      ),
-    );
+        darkTheme: ThemeData.dark(),
+        routes: _getRoutes());
   }
 }
