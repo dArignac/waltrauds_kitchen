@@ -8,6 +8,9 @@ import 'main.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
+// this is replaced by deploy.sh
+const String gitRevision = 'main';
+
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({Key? key}) : super(key: key);
 
@@ -27,6 +30,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               _createHeader(snapshot.hasData ? _createUserInfo(snapshot.data) : const SizedBox.shrink()),
               _createCommunityOverview(),
               snapshot.hasData ? _createSignOut() : const SizedBox.shrink(),
+              const SizedBox(height: 20),
+              _createVersionInfo(),
             ];
 
             return ListView(
@@ -101,6 +106,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         _auth.signOut();
         Navigator.pushReplacementNamed(context, Routes.home);
       },
+    );
+  }
+
+  Widget _createVersionInfo() {
+    return const ListTile(
+      leading: Icon(Icons.code),
+      title: Text(gitRevision),
     );
   }
 }

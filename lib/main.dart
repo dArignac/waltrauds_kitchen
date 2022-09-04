@@ -59,7 +59,7 @@ class WaltraudKitchenApp extends StatelessWidget {
         theme: theme.copyWith(
           colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),
         ),
-        darkTheme: ThemeData.dark(),
+        //darkTheme: ThemeData.dark(), // FIXME this looks weird, maybe need to configure properly
         routes: _getRoutes());
   }
 }
