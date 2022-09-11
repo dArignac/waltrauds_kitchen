@@ -60,16 +60,52 @@ class _AuthGateState extends State<AuthGate> {
   /// Creates or updates the user document in Firestore.
   _createOrUpdateUserDocument() {
     CollectionReference<Map<String, dynamic>> users = FirebaseFirestore.instance.collection('users');
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      users.doc(user.uid).get().then((snapshot) {
-        // FIXME need to merge only FirebaseAuth data once the user object is extended further
-        final userData = AuthenticatedUser(displayName: user.displayName!, photoURL: user.photoURL ?? '').toJson();
-        // FIXME add general error handling
-        users.doc(user.uid).set(userData).onError((error, _) => print('Error writing user document: $error'));
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null) {
+      users.doc(firebaseUser.uid).get().then((snapshot) {
+        if (snapshot.exists) {
+          var user = AuthenticatedUser.fromJson(snapshot.data());
+          var hasChanged = false;
+          // update user with auth info
+          if (firebaseUser.photoURL != null && firebaseUser.photoURL!.isNotEmpty && firebaseUser.photoURL != user.photoURL) {
+            user.photoURL = firebaseUser.photoURL!;
+            hasChanged = true;
+          }
+          // only write if data had changed
+          if (hasChanged) {
+            users.doc(firebaseUser.uid).set(user.toJson()).onError((error, _) {
+              // FIXME error handling
+              if (kDebugMode) {
+                print('Error writing user document: $error');
+              }
+            });
+          }
+        } else {
+          // create a new user
+          var user = AuthenticatedUser(
+            displayName: firebaseUser.displayName!,
+            photoURL: firebaseUser.photoURL ?? '',
+            communityCount: 0,
+          );
+          // write to Firestore
+          users.doc(firebaseUser.uid).set(user.toJson()).onError((error, _) {
+            // FIXME error handling
+            if (kDebugMode) {
+              print('Error writing user document: $error');
+            }
+          });
+        }
+      }, onError: (e) {
+        // FIXME error handling
+        if (kDebugMode) {
+          print('Error getting document: $e');
+        }
       });
     } else {
       // FIXME if auth failed we're lost
+      if (kDebugMode) {
+        print('CRITICAL: authentication failed');
+      }
     }
   }
 

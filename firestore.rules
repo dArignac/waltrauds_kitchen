@@ -23,9 +23,10 @@ service cloud.firestore {
   }
 
   // communities
-  function isCommunityOwner(database, communityId) {
-    return get(/databases/$(database)/documents/communities/$(communityId)/private_data/private).data.roles[request.auth.uid] in ["owner"];
-  }
+  // FIXME get and request is not available here?
+  //function isCommunityOwner(database, communityId) {
+  //  return get(/databases/$(database)/documents/communities/$(communityId)/private_data/private).data.roles[request.auth.uid] in ["owner"];
+  //}
 
   // communities - private data
   // TODO specify
@@ -41,8 +42,12 @@ service cloud.firestore {
     }
 
     match /communities/{communityId} {
-      allow read: if isAnyLoggedInUser();
-      allow update: if isCommunityOwner(database, communityId);
+      // FIXME only for developing - replace with real rules
+      allow read: if true;
+      allow write: if true;
+      // FIXME check and add the rules
+      //allow read: if isAnyLoggedInUser();
+      //allow update: if isCommunityOwner(database, communityId);
     }
   }
 }
