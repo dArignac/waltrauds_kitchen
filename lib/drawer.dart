@@ -26,10 +26,16 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             // the navigation list
+            var elementsForAuthenticatedUsers = <Widget>[];
+            if (snapshot.hasData) {
+              elementsForAuthenticatedUsers = [
+                _createCommunityOverview(),
+                _createSignOut(),
+              ];
+            }
             var elements = <Widget>[
               _createHeader(snapshot.hasData ? _createUserInfo(snapshot.data) : const SizedBox.shrink()),
-              _createCommunityOverview(),
-              snapshot.hasData ? _createSignOut() : const SizedBox.shrink(),
+              ...elementsForAuthenticatedUsers,
               const SizedBox(height: 20),
               _createVersionInfo(),
             ];
