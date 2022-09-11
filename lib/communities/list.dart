@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:waltrauds_kitchen/database.dart';
 import 'package:waltrauds_kitchen/widgets/auth.dart';
 import 'package:waltrauds_kitchen/widgets/layout.dart';
 
+import '../db/community.dart';
 import '../main.dart';
 
 class CommunitySelector extends StatefulWidget {
