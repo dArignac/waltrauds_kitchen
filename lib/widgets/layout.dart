@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../drawer.dart';
+import '../globals.dart' as globals;
+
+class WaltraudScaffold extends StatelessWidget {
+  final Widget body;
+  const WaltraudScaffold({Key? key, required this.body}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(globals.applicationName)),
+      drawer: const DrawerWidget(),
+      body: body,
+    );
+  }
+}
+
 class BoxWidget extends StatelessWidget {
   final List<Widget> children;
   final double width;

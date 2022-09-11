@@ -1,22 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:waltrauds_kitchen/communities/list.dart';
-import 'package:waltrauds_kitchen/widgets/layout.dart';
 import 'package:waltrauds_kitchen/widgets/auth.dart';
+import 'package:waltrauds_kitchen/widgets/layout.dart';
 
 import '../communities/edit.dart';
-import '../drawer.dart';
-import '../globals.dart' as globals;
 
 class CommunityListPage extends StatelessWidget {
   const CommunityListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // FIXME refactor to reuse scaffold
-    return Scaffold(
-      appBar: AppBar(title: Text(globals.applicationName)),
-      drawer: const DrawerWidget(),
+    return WaltraudScaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -37,10 +32,7 @@ class CommunityCreatePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // FIXME refactor to reuse scaffold
-    return Scaffold(
-      appBar: AppBar(title: Text(globals.applicationName)),
-      drawer: const DrawerWidget(),
+    return WaltraudScaffold(
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
