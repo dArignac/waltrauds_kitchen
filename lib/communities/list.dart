@@ -89,6 +89,9 @@ class _CommunityLinkListState extends State<CommunityLinkList> {
                 ),
               ),
             );
+            communityLinks.add(
+              const SizedBox(height: 10)
+            );
           });
 
           if (communityLinks.isEmpty) {

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:waltrauds_kitchen/pages/communities.dart';
 import 'package:waltrauds_kitchen/pages/home.dart';
 
@@ -55,11 +57,18 @@ class WaltraudKitchenApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = ThemeData(primarySwatch: Colors.indigo);
     return MaterialApp(
-        title: globals.applicationName,
-        theme: theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),
-        ),
-        //darkTheme: ThemeData.dark(), // FIXME this looks weird, maybe need to configure properly
-        routes: _getRoutes());
+      title: globals.applicationName,
+      theme: theme.copyWith(
+        colorScheme: theme.colorScheme.copyWith(secondary: Colors.blue),
+      ),
+      //darkTheme: ThemeData.dark(), // FIXME this looks weird, maybe need to configure properly
+      routes: _getRoutes(),
+      localizationsDelegates: const [
+        FormBuilderLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: FormBuilderLocalizations.delegate.supportedLocales,
+    );
   }
 }

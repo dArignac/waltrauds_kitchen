@@ -1,53 +1,55 @@
 rules_version = '2';
 service cloud.firestore {
 
-  // general authentication
-  function isAnyLoggedInUser() {
-    return request.auth != null &&
-      request.auth.token.email_verified;
-  }
-
-  function isSpecificLoggedInUser(userId) {
-    return isAnyLoggedInUser() &&
-      userId == request.auth.uid;
-  }
-
-  // users
-  function userDisplayNameIsValid() {
-    return request.resource.data.displayName is string &&
-      request.resource.data.displayName.size() > 0;
-  }
-
-  function userPhotoUrlIsValid() {
-    return request.resource.data.photoURL is string;
-  }
-
-  // communities
-  // FIXME get and request is not available here?
-  //function isCommunityOwner(database, communityId) {
-  //  return get(/databases/$(database)/documents/communities/$(communityId)/private_data/private).data.roles[request.auth.uid] in ["owner"];
-  //}
-
-  // communities - private data
-  // TODO specify
-
-  // matches
-  match /databases/{database}/documents {
-
-    match /users/{userId} {
-      allow read: if isSpecificLoggedInUser(userId);
-      allow create, update: if isSpecificLoggedInUser(userId) &&
-        userDisplayNameIsValid() &&
-        userPhotoUrlIsValid();
+    // general authentication
+    function isAnyLoggedInUser() {
+        return request.auth != null
+            && request.auth.token.email_verified;
     }
 
-    match /communities/{communityId} {
-      // FIXME only for developing - replace with real rules
-      allow read: if true;
-      allow write: if true;
-      // FIXME check and add the rules
-      //allow read: if isAnyLoggedInUser();
-      //allow update: if isCommunityOwner(database, communityId);
+    function isSpecificLoggedInUser(userId) {
+        return isAnyLoggedInUser()
+            && userId == request.auth.uid;
     }
-  }
+
+    // users
+    function userDisplayNameIsValid() {
+        return request.resource.data.displayName is string
+            && request.resource.data.displayName.size() > 0;
+    }
+
+    function userPhotoUrlIsValid() {
+        return request.resource.data.photoURL is string;
+    }
+
+    // matches
+    match /databases/{database}/documents {
+
+        function isRegisteredUser() {
+            return isAnyLoggedInUser()
+                && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+        }
+
+        match /users/{userId} {
+            allow read: if isSpecificLoggedInUser(userId);
+            allow create: if isSpecificLoggedInUser(userId)
+                && userDisplayNameIsValid()
+                && userPhotoUrlIsValid();
+            allow update: if isRegisteredUser()
+                && userDisplayNameIsValid()
+                && userPhotoUrlIsValid();
+        }
+
+        match /communities/{communityId} {
+            allow read: if isRegisteredUser();
+            allow create: if isRegisteredUser();
+            // FIXME to be defined
+            //allow update: if get(/databases/$(database)/documents/communities/$(communityId)/private_data/private).data.roles[request.auth.uid] in ["owner"];
+        }
+
+        match /communities/{communityId}/private_data/private {
+            allow read: if isRegisteredUser(); // FIXME validate
+            allow create: if isRegisteredUser();
+        }
+    }
 }
