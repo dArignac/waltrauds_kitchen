@@ -1,0 +1,19 @@
+{
+  "name": "firestore-tests",
+  "scripts": {
+    "test": "mocha --watch src/*.test.ts"
+  },
+  "private": true,
+  "dependencies": {
+    "@firebase/rules-unit-testing": "^2.0.4",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.7.20",
+    "mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.8.3"
+  },
+  "volta": {
+    "node": "16.17.1"
+  }
+}

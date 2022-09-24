@@ -24,6 +24,7 @@ service cloud.firestore {
 
     // matches
     match /databases/{database}/documents {
+        // FIXME write unit tests with VSC
 
         function isRegisteredUser() {
             return isAnyLoggedInUser()
