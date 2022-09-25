@@ -19,7 +19,8 @@ service cloud.firestore {
     }
 
     function userPhotoUrlIsValid() {
-        return request.resource.data.photoURL is string;
+        return request.resource.data.photoURL is string
+            && request.resource.data.photoURL.size() > 0;
     }
 
     // matches
@@ -42,8 +43,8 @@ service cloud.firestore {
         }
 
         match /communities/{communityId} {
-            allow read: if isRegisteredUser();
-            allow create: if isRegisteredUser();
+            allow read: if isRegisteredUser(); // FIXME is this good enough?
+            allow create: if isRegisteredUser(); // FIXME also check community payload?
             // FIXME to be defined
             //allow update: if get(/databases/$(database)/documents/communities/$(communityId)/private_data/private).data.roles[request.auth.uid] in ["owner"];
         }

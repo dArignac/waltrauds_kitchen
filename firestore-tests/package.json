@@ -1,7 +1,7 @@
 {
   "name": "firestore-tests",
   "scripts": {
-    "test": "mocha --watch src/*.test.ts"
+    "test": "mocha --watch"
   },
   "private": true,
   "dependencies": {
