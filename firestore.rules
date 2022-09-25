@@ -25,11 +25,24 @@ service cloud.firestore {
 
     // matches
     match /databases/{database}/documents {
-        // FIXME write unit tests with VSC
-
         function isRegisteredUser() {
             return isAnyLoggedInUser()
                 && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+        }
+
+        function isValidCommunity() {
+            return request.resource.data.name is string
+                && request.resource.data.name.size() > 0;
+        }
+
+        function isValidCommunityPrivateData() {
+            return request.resource.data.roles is map
+                && request.resource.data.roles.size() > 0;
+        }
+
+        function isValidCommunityPrivateDataOnCreation() {
+            return request.resource.data.roles.size() == 1
+                && request.resource.data.roles[request.auth.uid] == "owner";
         }
 
         match /users/{userId} {
@@ -44,14 +57,17 @@ service cloud.firestore {
 
         match /communities/{communityId} {
             allow read: if isRegisteredUser(); // FIXME is this good enough?
-            allow create: if isRegisteredUser(); // FIXME also check community payload?
+            allow create: if isRegisteredUser()
+                && isValidCommunity();
             // FIXME to be defined
             //allow update: if get(/databases/$(database)/documents/communities/$(communityId)/private_data/private).data.roles[request.auth.uid] in ["owner"];
         }
 
         match /communities/{communityId}/private_data/private {
             allow read: if isRegisteredUser(); // FIXME validate
-            allow create: if isRegisteredUser();
+            allow create: if isRegisteredUser()
+                && isValidCommunityPrivateData()
+                && isValidCommunityPrivateDataOnCreation();
         }
     }
 }
